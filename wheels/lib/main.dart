@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wheels/styles.dart';
-
+import 'home/home.dart';
 import 'styles.dart';
 
 void main() {
@@ -70,34 +70,6 @@ class _HomeState extends State<Home> {
         ),
       ),
       backgroundColor: Color(0xffb21b31),
-    );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(icon: Icon(Icons.apps), onPressed: () {}),
-        actions: [
-          IconButton(icon: Icon(Icons.add, size: 35), onPressed: () {})
-        ],
-        title: Text(
-          "Wheels Uniandes",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
     );
   }
 }
