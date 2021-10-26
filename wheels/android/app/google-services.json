@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "488734395130",
+    "firebase_url": "https://nutritionacademic.firebaseio.com",
+    "project_id": "nutritionacademic",
+    "storage_bucket": "nutritionacademic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488734395130:android:fa7356f0c0f85da4d29743",
+        "android_client_info": {
+          "package_name": "com.example.community_board"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488734395130-v31k6q81971jhrhf2tisqfiq292stm7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj_eiQAroz_0eI_GWRTT-NzWKE61N_LII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488734395130-v31k6q81971jhrhf2tisqfiq292stm7s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "488734395130-qkt0h4k11vq1pb6n3ta11sv8ange6g82.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wheels"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488734395130:android:da4dc25723ad8231d29743",
+        "android_client_info": {
+          "package_name": "com.example.wheels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488734395130-v31k6q81971jhrhf2tisqfiq292stm7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj_eiQAroz_0eI_GWRTT-NzWKE61N_LII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488734395130-v31k6q81971jhrhf2tisqfiq292stm7s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "488734395130-qkt0h4k11vq1pb6n3ta11sv8ange6g82.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wheels"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
