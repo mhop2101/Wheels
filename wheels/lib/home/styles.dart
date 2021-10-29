@@ -53,14 +53,94 @@ Padding columnChildContainer(
   );
 }
 
-Padding lowerColumnText({String text = "Dir"}) => Padding(
+Padding columnChildContainerDest(
+  dynamic context, {
+  String text = "Dir",
+  double marginTop = 8.0,
+  bool originUniandes = false,
+}) {
+  if (originUniandes == false) {
+    text = "Uniandes";
+  }
+  return Padding(
+    padding: EdgeInsets.only(top: marginTop),
+    child: Container(
+      width: MediaQuery.of(context).size.width * 0.25,
+      decoration: BoxDecoration(
+        color: Colors.white38,
+        borderRadius: BorderRadius.all(
+          Radius.circular(13),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Padding columnChildContainerOri(
+  dynamic context, {
+  String text = "Dir",
+  double marginTop = 8.0,
+  bool originUniandes = true,
+}) {
+  if (originUniandes == true) {
+    text = "Uniandes";
+  }
+  return Padding(
+    padding: EdgeInsets.only(top: marginTop),
+    child: Container(
+      width: MediaQuery.of(context).size.width * 0.25,
+      decoration: BoxDecoration(
+        color: Colors.white38,
+        borderRadius: BorderRadius.all(
+          Radius.circular(13),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Padding lowerColumnText(
+  dynamic context,
+  String text,
+) =>
+    Padding(
       padding: const EdgeInsets.only(top: 30, bottom: 25),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.28,
+        child: Center(
+          child: Text(
+            text,
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
     );

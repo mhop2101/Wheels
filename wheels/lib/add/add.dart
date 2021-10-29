@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:wheels/models/groupModel.dart';
-
+import 'package:intl/intl.dart';
 import '../styles.dart';
 
 class Add extends StatefulWidget {
@@ -19,58 +19,15 @@ class _AddState extends State<Add> {
   late TextEditingController _priceInputController;
   late TextEditingController _destinationOriginInputController;
   late TextEditingController _whatsAppInputController;
-  var items1 = [
-    'Cra 1',
-    'Cra 2',
-    'Cra 3',
-    'Cra 4',
-    'Cra 5',
-    'Cra 6',
-    'Cra 7',
-    'Cra 8',
-    'Cra 9',
-    'Cra 10',
-  ];
-  var items2 = [
-    'Cra 1',
-    'Cra 2',
-    'Cra 3',
-    'Cra 4',
-    'Cra 5',
-    'Cra 6',
-    'Cra 7',
-    'Cra 8',
-    'Cra 9',
-    'Cra 10',
-  ];
-  var items3 = [
-    'Cra 1',
-    'Cra 2',
-    'Cra 3',
-    'Cra 4',
-    'Cra 5',
-    'Cra 6',
-    'Cra 7',
-    'Cra 8',
-    'Cra 9',
-    'Cra 10',
-  ];
+  late TextEditingController _ruta1Controller;
+  late TextEditingController _ruta2Controller;
+  late TextEditingController _ruta3Controller;
+
   var grupos = [
-    'Cra 1',
-    'Cra 2',
-    'Cra 3',
-    'Cra 4',
-    'Cra 5',
-    'Cra 6',
-    'Cra 7',
-    'Cra 8',
-    'Cra 9',
-    'Cra 10',
+    '-',
   ];
-  String dropdownvalue = 'Cra 1';
-  String dropdownvalue2 = 'Cra 1';
-  String dropdownvalue3 = 'Cra 1';
-  String dropdownvalue4 = 'Cra 1';
+
+  String dropdownvalue4 = '-';
 
   dynamic _originUniandes = false;
 
@@ -98,10 +55,23 @@ class _AddState extends State<Add> {
   @override
   void initState() {
     super.initState();
+    _ruta1Controller = TextEditingController();
+    _ruta2Controller = TextEditingController();
+    _ruta3Controller = TextEditingController();
     _nameInputController = TextEditingController();
     _priceInputController = TextEditingController();
     _destinationOriginInputController = TextEditingController();
     _whatsAppInputController = TextEditingController();
+    dbref.once().then((DataSnapshot snapshot) {
+      for (var item in snapshot.value["Grupos"].keys) {
+        print(
+            "${snapshot.value["Grupos"][item]["titulo"]} ${snapshot.value["Grupos"][item]["subtitulo"]}");
+        setState(() {
+          grupos.add(
+              "${snapshot.value["Grupos"][item]["titulo"]} ${snapshot.value["Grupos"][item]["subtitulo"]}");
+        });
+      }
+    });
   }
 
   @override
@@ -317,44 +287,104 @@ class _AddState extends State<Add> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    DropdownButton(
-                      value: dropdownvalue,
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      items: items1.map((String items) {
-                        return DropdownMenuItem(
-                            value: items, child: Text(items));
-                      }).toList(),
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          dropdownvalue = value;
-                        });
-                      },
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _ruta1Controller,
+                          cursorColor: Color(0xffB21B31),
+                          decoration: InputDecoration(
+                            labelText: "Ruta",
+                            labelStyle: TextStyle(color: Color(0xffB21B31)),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: 'Lugar 1',
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 2.3,
+                                color: Color(0xffB21B31),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 2.3,
+                                color: Color(0xffB21B31),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    DropdownButton(
-                      value: dropdownvalue2,
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      items: items2.map((String items) {
-                        return DropdownMenuItem(
-                            value: items, child: Text(items));
-                      }).toList(),
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          dropdownvalue2 = value;
-                        });
-                      },
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _ruta2Controller,
+                          cursorColor: Color(0xffB21B31),
+                          decoration: InputDecoration(
+                            labelText: "Ruta",
+                            labelStyle: TextStyle(color: Color(0xffB21B31)),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: 'Lugar 2',
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 2.3,
+                                color: Color(0xffB21B31),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 2.3,
+                                color: Color(0xffB21B31),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    DropdownButton(
-                      value: dropdownvalue3,
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      items: items3.map((String items) {
-                        return DropdownMenuItem(
-                            value: items, child: Text(items));
-                      }).toList(),
-                      onChanged: (dynamic value) {
-                        setState(() {
-                          dropdownvalue3 = value;
-                        });
-                      },
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: _ruta3Controller,
+                          cursorColor: Color(0xffB21B31),
+                          decoration: InputDecoration(
+                            labelText: "Ruta",
+                            labelStyle: TextStyle(color: Color(0xffB21B31)),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: 'Lugar 3',
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 2.3,
+                                color: Color(0xffB21B31),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 2.3,
+                                color: Color(0xffB21B31),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -416,15 +446,21 @@ class _AddState extends State<Add> {
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   child: ElevatedButton(
                     onPressed: () {
+                      DateTime tempDate = DateFormat("hh:mm").parse(
+                          time!.hour.toString() +
+                              ":" +
+                              time!.minute.toString());
+                      var dateFormat = DateFormat("h:mm a");
                       dbref.child("Viajes").push().set({
                         "Nombre": _nameInputController.text,
                         "Precio": _priceInputController.text,
-                        "Hora": "${time.hour}:${time.minute}",
+                        "Hora": dateFormat.format(tempDate),
+                        //"${time.hour}:${time.minute}",
                         "OrigenUniandes": _originUniandes,
                         "Ruta": _destinationOriginInputController.text,
-                        "Lugar1": dropdownvalue,
-                        "Lugar2": dropdownvalue2,
-                        "Lugar3": dropdownvalue3,
+                        "Lugar1": _ruta1Controller.text,
+                        "Lugar2": _ruta2Controller.text,
+                        "Lugar3": _ruta3Controller.text,
                         "Grupo": dropdownvalue4,
                         "Numero Whatsapp": _whatsAppInputController.text,
                       });
