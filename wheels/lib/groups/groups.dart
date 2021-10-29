@@ -114,7 +114,8 @@ class _GroupsState extends State<Groups> {
                         ),
                         child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: returnIcon(groups[index].userSubscribed)),
+                            //child: returnIcon(groups[index].userSubscribed)),
+                            child: returnIcon(true)),
                       )
                     ],
                   )
