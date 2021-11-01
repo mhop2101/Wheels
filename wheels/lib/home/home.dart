@@ -81,12 +81,14 @@ Widget buildPostCard(context, index, trips) {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         decoration: BoxDecoration(
-          color: [
-            Color(0xffB21B31),
-            Color(0xffE59503),
-            Color(0xffD561D5),
-            Color(0xff4B0082)
-          ][Random().nextInt(3)],
+          //color: [
+          //Color(0xffB21B31),
+          //Color(0xffE59503),
+          //Color(0xffD561D5),
+          //Color(0xff4B0082)
+          //][Random().nextInt(3)],
+          color: Color(0xffB21B31),
+
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(40),
             bottomLeft: Radius.circular(40),
