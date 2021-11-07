@@ -2,7 +2,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:wheels/models/groupModel.dart';
 import 'package:wheels/sharedPreferences/preferences.dart';
 
 class Groups extends StatefulWidget {
