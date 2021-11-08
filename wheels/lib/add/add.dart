@@ -64,8 +64,6 @@ class _AddState extends State<Add> {
     _whatsAppInputController = TextEditingController();
     dbref.once().then((DataSnapshot snapshot) {
       for (var item in snapshot.value["Grupos"].keys) {
-        print(
-            "${snapshot.value["Grupos"][item]["titulo"]} ${snapshot.value["Grupos"][item]["subtitulo"]}");
         setState(() {
           grupos.add(
               "${snapshot.value["Grupos"][item]["titulo"]} ${snapshot.value["Grupos"][item]["subtitulo"]}");

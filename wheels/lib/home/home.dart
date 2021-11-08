@@ -16,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _tripsRef = FirebaseDatabase.instance.reference().child("Viajes");
+  final controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: FirebaseAnimatedList(
         query: _tripsRef,
+        reverse: true,
+        scrollDirection: Axis.vertical,
+        controller: controller,
+        duration: Duration(seconds: 3),
         itemBuilder: (
           BuildContext context,
           DataSnapshot snapshot,
