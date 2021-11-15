@@ -20,10 +20,11 @@ class PreferencesService {
   dynamic getSubsciptionStatus(String groupId) async {
     final preferences = await SharedPreferences.getInstance();
     if (preferences.getBool(groupId) == null) {
-      preferences.setBool(groupId, false);
+      await preferences.setBool(groupId, false);
       return false;
     } else {
-      return preferences.getBool(groupId);
+      var result = await preferences.getBool(groupId);
+      return result;
     }
   }
 }
