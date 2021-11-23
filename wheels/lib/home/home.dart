@@ -1,7 +1,10 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:wheels/Profile/profileOther.dart';
 import 'package:wheels/add/add.dart';
+import 'package:wheels/Profile/profile.dart';
+
 import 'package:wheels/groups/groups.dart';
 import 'package:wheels/home/styles.dart';
 import "dart:math";
@@ -40,6 +43,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => Add(),
+                  ),
+                );
+              }),
+          IconButton(
+              icon: Icon(Icons.person, size: 35),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Profile(),
                   ),
                 );
               })
@@ -104,9 +117,10 @@ Widget buildPostCard(context, index, trips) {
         child: Column(
           children: [
             upperCardRow(
-              image: "https://edouardfouche.com/img/color-wheel/farbkreis.png",
+              image:
+                  "https://i.dlpng.com/static/png/5277114-user-staff-person-man-profile-boss-circle-svg-png-icon-free-person-icon-png-980_980_preview.png",
               title: trips.value["Grupo"].split(" ")[0],
-              subtitle: trips.value["Grupo"].split(" ")[1],
+              subtitle: trips.value["Grupo"].split(" ")[0],
               time: trips.value["Hora"],
             ),
             Row(
@@ -179,14 +193,9 @@ Widget buildPostCard(context, index, trips) {
       ),
     ),
     onTap: () async {
-      var url = "https://api.whatsapp.com/send?phone=57" +
-          "${trips.value["Numero Whatsapp"]}" +
-          "&text=Hola%2C%20he%20visto%20tu%20anuncio%20en%20la%20app%20de%20wheels%20uniandes%20!";
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => ProfileOther()),
+      );
     },
   );
 }

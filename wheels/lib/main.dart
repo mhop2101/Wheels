@@ -3,12 +3,22 @@ import 'package:wheels/styles.dart';
 import 'home/home.dart';
 import 'styles.dart';
 
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:wheels/themes.dart';
+import 'package:wheels/utils/user_preferences.dart';
+
+final user = UserPreferences.myUser;
+
 void main() {
-  runApp(
-    new MaterialApp(
-      home: Home(),
-    ),
-  );
+  runApp(ThemeProvider(
+      initTheme: user.isDarkMode ? MyThemes.darkTheme : MyThemes.lightTheme,
+      child: Builder(
+          builder: (context) => new MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: Home(),
+              theme: ThemeProvider.of(context)))));
 }
 
 class Home extends StatefulWidget {
