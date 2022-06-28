@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:wheels/sharedPreferences/preferences.dart';
 import 'package:wheels/styles.dart';
 import 'home/home.dart';
 import 'styles.dart';
@@ -19,6 +22,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _preferenceService = PreferencesService();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //_preferenceService.addTripInfo();
+    //_preferenceService.getTripInfo().then((value) {
+    //  print("valor");
+    //  print(jsonDecode(value[2])["a"]);
+    //});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

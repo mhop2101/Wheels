@@ -1,8 +1,9 @@
+import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wheels/models/groupModel.dart';
 import 'package:intl/intl.dart';
-import '../styles.dart';
+import 'package:wheels/sharedPreferences/preferences.dart';
 
 class Add extends StatefulWidget {
   Add({Key? key}) : super(key: key);
@@ -12,9 +13,11 @@ class Add extends StatefulWidget {
 }
 
 class _AddState extends State<Add> {
-  final dbref = FirebaseDatabase.instance.reference();
+  final _preferenceService = PreferencesService();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  dynamic time;
+  dynamic time; // TimeOfDay
+  dynamic dateInput;
   late TextEditingController _nameInputController;
   late TextEditingController _priceInputController;
   late TextEditingController _destinationOriginInputController;
@@ -27,7 +30,14 @@ class _AddState extends State<Add> {
     '-',
   ];
 
+  var storedTripsShow = [
+    "Rutas guardadas",
+  ];
+
+  var storedTrips = [];
+
   String dropdownvalue4 = '-';
+  String dropdownvalueStoredTrips = 'Rutas guardadas';
 
   dynamic _originUniandes = false;
 
@@ -35,11 +45,17 @@ class _AddState extends State<Add> {
     if (time == null) {
       return "Hora";
     } else {
-      return "${time.hour}:${time.minute}";
+      return time.format(context);
     }
   }
 
-  String test = "";
+  String getDayText() {
+    if (dateInput == null) {
+      return "Día";
+    } else {
+      return DateFormat.yMMMd().format(dateInput);
+    }
+  }
 
   Future pickTime(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 9, minute: 0);
@@ -49,6 +65,21 @@ class _AddState extends State<Add> {
     );
     setState(() {
       time = newTime;
+    });
+  }
+
+  void pickDate() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(Duration(days: 1)),
+      lastDate: DateTime.now().add(Duration(days: 1)),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          dateInput = value;
+        });
+      }
     });
   }
 
@@ -62,12 +93,33 @@ class _AddState extends State<Add> {
     _priceInputController = TextEditingController();
     _destinationOriginInputController = TextEditingController();
     _whatsAppInputController = TextEditingController();
-    dbref.once().then((DataSnapshot snapshot) {
-      for (var item in snapshot.value["Grupos"].keys) {
-        setState(() {
-          grupos.add(
-              "${snapshot.value["Grupos"][item]["titulo"]} ${snapshot.value["Grupos"][item]["subtitulo"]}");
-        });
+
+    // dbref.once().then((DataSnapshot snapshot) {
+    //   for (var item in snapshot.value["Grupos"].keys) {
+    //     setState(() {
+    //       grupos.add(
+    //           "${snapshot.value["Grupos"][item]["titulo"]} ${snapshot.value["Grupos"][item]["subtitulo"]}");
+    //     });
+    //   }
+    // });
+
+    _preferenceService.getTripInfo().then((dynamic snapshot) {
+      if (snapshot != null) {
+        for (var i = 0; i < snapshot.length; i += 1) {
+          var storedTripMap = json.decode(snapshot[i]);
+
+          if (storedTripMap["OrigenUniandes"] == "true") {
+            String fromUni = "Desde Uniandes";
+            storedTripsShow.add(
+                "Nombre: ${storedTripMap["Nombre"]} \nTarifa: ${storedTripMap["Precio"].toString()}\n$fromUni\nRuta: ${storedTripMap["destinationOrigin"]}\nLugar 1: ${storedTripMap["Lugar1"]}\nLugar 2: ${storedTripMap["Lugar2"]}\nLugar 3: ${storedTripMap["Lugar3"]}\nGrupo: ${storedTripMap["Grupo"]}\nNumero: ${storedTripMap["Numero Whatsapp"]}");
+          } else {
+            String fromUni = "Hacia Uniandes";
+            storedTripsShow.add(
+                "Nombre: ${storedTripMap["Nombre"]} \nTarifa: ${storedTripMap["Precio"].toString()}\n$fromUni\nRuta: ${storedTripMap["destinationOrigin"]}\nLugar 1: ${storedTripMap["Lugar1"]}\nLugar 2: ${storedTripMap["Lugar2"]}\nLugar 3: ${storedTripMap["Lugar3"]}\nGrupo: ${storedTripMap["Grupo"]}\nNumero: ${storedTripMap["Numero Whatsapp"]}");
+          }
+
+          storedTrips.add(storedTripMap);
+        }
       }
     });
   }
@@ -97,6 +149,57 @@ class _AddState extends State<Add> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Rutas guardadas ?
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: DropdownButton(
+                      value: dropdownvalueStoredTrips,
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      items: storedTripsShow.map((items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                items,
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Divider(
+                                color: Colors.black,
+                                thickness: 2,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (dynamic value) {
+                        setState(() {
+                          int i = storedTripsShow.indexOf(value);
+                          if (i != -1 && i != 0) {
+                            dynamic tripData = storedTrips[i - 1];
+                            _nameInputController.text = tripData["Nombre"];
+                            _ruta1Controller.text = tripData["Lugar1"];
+                            _ruta2Controller.text = tripData["Lugar2"];
+                            _ruta3Controller.text = tripData["Lugar3"];
+                            _priceInputController.text = tripData["Precio"];
+                            _destinationOriginInputController.text =
+                                tripData["destinationOrigin"];
+                            _whatsAppInputController.text =
+                                tripData["Numero Whatsapp"];
+                            dropdownvalue4 = tripData["Grupo"];
+                            if (tripData["OrigenUniandes"] == "true") {
+                              _originUniandes = true;
+                            } else {
+                              _originUniandes = false;
+                            }
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -175,27 +278,65 @@ class _AddState extends State<Add> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          pickTime(context);
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Color(0xffB21B31), width: 2.3),
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                          ),
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.0),
-                              child: Text(
-                                getTimeText(),
-                                style: TextStyle(fontSize: 28),
+                      Column(
+                        children: [
+                          // Dia
+                          InkWell(
+                            onTap: () {
+                              pickDate();
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.35,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Color(0xffB21B31), width: 2.3),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4)),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 5.0),
+                                  child: Text(
+                                    getDayText(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            // Hora
+                            child: InkWell(
+                              onTap: () {
+                                pickTime(context);
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Color(0xffB21B31), width: 2.3),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4)),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 5.0),
+                                    child: Text(
+                                      getTimeText(),
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Column(
                         children: [
@@ -444,24 +585,93 @@ class _AddState extends State<Add> {
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   child: ElevatedButton(
                     onPressed: () {
-                      DateTime tempDate = DateFormat("hh:mm").parse(
-                          time!.hour.toString() +
-                              ":" +
-                              time!.minute.toString());
-                      var dateFormat = DateFormat("h:mm a");
-                      dbref.child("Viajes").push().set({
-                        "Nombre": _nameInputController.text,
-                        "Precio": _priceInputController.text,
-                        "Hora": dateFormat.format(tempDate),
-                        //"${time.hour}:${time.minute}",
-                        "OrigenUniandes": _originUniandes,
-                        "Ruta": _destinationOriginInputController.text,
-                        "Lugar1": _ruta1Controller.text,
-                        "Lugar2": _ruta2Controller.text,
-                        "Lugar3": _ruta3Controller.text,
-                        "Grupo": dropdownvalue4,
-                        "Numero Whatsapp": _whatsAppInputController.text,
-                      });
+                      String name = _nameInputController.text;
+                      String price = _priceInputController.text;
+                      String destinationOrigin =
+                          _destinationOriginInputController.text;
+                      String ruta1 = _ruta1Controller.text;
+                      String ruta2 = _ruta2Controller.text;
+                      String ruta3 = _ruta3Controller.text;
+                      String grupo = dropdownvalue4;
+                      String whatsapp = _whatsAppInputController.text;
+
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                                title: Text("Guardar ruta?"),
+                                content: Text(
+                                    "Desea guardar la información de esta ruta ?"),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        _ruta1Controller.clear();
+                                        _ruta2Controller.clear();
+                                        _ruta3Controller.clear();
+                                        _nameInputController.clear();
+                                        _priceInputController.clear();
+                                        _destinationOriginInputController
+                                            .clear();
+                                        _whatsAppInputController.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("No")),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        _preferenceService.addTripInfo(
+                                            name,
+                                            price,
+                                            _originUniandes,
+                                            destinationOrigin,
+                                            ruta1,
+                                            ruta2,
+                                            ruta3,
+                                            grupo,
+                                            whatsapp);
+                                        _ruta1Controller.clear();
+                                        _ruta2Controller.clear();
+                                        _ruta3Controller.clear();
+                                        _nameInputController.clear();
+                                        _priceInputController.clear();
+                                        _destinationOriginInputController
+                                            .clear();
+                                        _whatsAppInputController.clear();
+                                        setState(() {
+                                          _preferenceService
+                                              .getTripInfo()
+                                              .then((dynamic snapshot) {
+                                            if (snapshot != null) {
+                                              for (var i = 0;
+                                                  i < snapshot.length;
+                                                  i += 1) {
+                                                var storedTripMap =
+                                                    json.decode(snapshot[i]);
+
+                                                if (storedTripMap[
+                                                        "OrigenUniandes"] ==
+                                                    "true") {
+                                                  String fromUni =
+                                                      "Desde Uniandes";
+                                                  storedTripsShow.add(
+                                                      "Nombre: ${storedTripMap["Nombre"]} \nTarifa: ${storedTripMap["Precio"].toString()}\n$fromUni\nRuta: ${storedTripMap["destinationOrigin"]}\nLugar 1: ${storedTripMap["Lugar1"]}\nLugar 2: ${storedTripMap["Lugar2"]}\nLugar 3: ${storedTripMap["Lugar3"]}\nGrupo: ${storedTripMap["Grupo"]}\nNumero: ${storedTripMap["Numero Whatsapp"]}");
+                                                } else {
+                                                  String fromUni =
+                                                      "Hacia Uniandes";
+                                                  storedTripsShow.add(
+                                                      "Nombre: ${storedTripMap["Nombre"]} \nTarifa: ${storedTripMap["Precio"].toString()}\n$fromUni\nRuta: ${storedTripMap["destinationOrigin"]}\nLugar 1: ${storedTripMap["Lugar1"]}\nLugar 2: ${storedTripMap["Lugar2"]}\nLugar 3: ${storedTripMap["Lugar3"]}\nGrupo: ${storedTripMap["Grupo"]}\nNumero: ${storedTripMap["Numero Whatsapp"]}");
+                                                }
+
+                                                storedTrips.add(storedTripMap);
+                                              }
+                                            }
+                                          });
+                                        });
+
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Si")),
+                                ],
+                              ),
+                          barrierDismissible: false);
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.max,

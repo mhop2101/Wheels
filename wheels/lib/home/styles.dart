@@ -149,6 +149,7 @@ Row upperCardRow(
         {String title = "Usaquen",
         String subtitle = "Septima",
         String time = "7:00 AM",
+        String day = "Nov 23 2020",
         String image =
             "https://edouardfouche.com/img/color-wheel/farbkreis.png"}) =>
     Row(
@@ -192,16 +193,34 @@ Row upperCardRow(
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 24.0, right: 30),
-          child: Text(
-            time,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+        Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0, right: 30),
+              child: Text(
+                time,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.only(right: 25.0),
+              child: Text(
+                day,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )
+          ],
         ),
       ],
     );
